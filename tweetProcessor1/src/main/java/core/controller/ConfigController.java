@@ -1,5 +1,8 @@
 package core.controller;
 
+import core.rabbit.Receiver;
+import core.tweetprocessors.EncryptService;
+import core.tweetprocessors.VowelChangeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -29,33 +32,25 @@ public class ConfigController {
     @Value("${uri.tweetAccess}")
     private String tweetAccessUri;
 
+    @Value("${processor.id}")
+    private String processorId;
 
-    //@Autowired
-    //TwitterLookupService twitter;
+    @Autowired
+    EncryptService encryptService;
 
-    @GetMapping("/config")
-    public HttpEntity config(String text) throws IOException {
-        String tweetAccessFindByText = "http://"+tweetAccessUri+"/searchedTweets/search/findByTextContaining";
+    @Autowired
+    VowelChangeService vowelChangeService;
 
-        RestTemplate restTemplate = new RestTemplate();
+    @GetMapping("/change")
+    public String change() throws IOException {
+        int processor = Integer.parseInt(processorId);
+        if(processor==1){
+            encryptService.changeMode();
+        }else if(processor==2){
+            vowelChangeService.changeVowel();
+        }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(tweetAccessFindByText)
-                .queryParam("text", text);
-
-
-        HttpEntity<?> entity = new HttpEntity<>(headers);
-
-        HttpEntity<String> response = restTemplate.exchange(
-                builder.toUriString(),
-                HttpMethod.GET,
-                entity,
-                String.class);
-
-
-        return response;
+        return "{\"status\": \"OK\"}";
 
     }
 

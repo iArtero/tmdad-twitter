@@ -19,7 +19,7 @@ public class Application {
 
     public static final String TWITTER_FANOUT_EXCHANGE = "tweets";
 
-    static final String QUEUE_NAME_TWEET_SAVER = "QUEUE_TWEET_SAVER";
+    static final String QUEUE_NAME_TWEET_SAVER = "QUEUE_TWEET_SAVER_1";
 
     @Bean
     Queue queueTweetSaver() {
@@ -27,14 +27,20 @@ public class Application {
     }
 
     @Bean
-    FanoutExchange twitterFanoutExchange2() {
-        return new FanoutExchange(TWITTER_FANOUT_EXCHANGE);
+    TopicExchange twitterFanoutExchange2() {
+        return new TopicExchange(TWITTER_FANOUT_EXCHANGE);
     }
     @Bean
     Binding binding2() {
-        return BindingBuilder.bind(queueTweetSaver()).to(
-                twitterFanoutExchange2());
+        /*return BindingBuilder.bind(queueTweetSaver()).to(
+                twitterFanoutExchange2());*/
+
+        return BindingBuilder.bind(queueTweetSaver())
+                .to(twitterFanoutExchange2())
+                .with(TWITTER_FANOUT_EXCHANGE+".#");
     }
+
+
 
     @Bean
     SimpleMessageListenerContainer containerTweetSaver(ConnectionFactory connectionFactory,

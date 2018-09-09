@@ -22,14 +22,13 @@ public class Application {
     public static final String TWITTER_FANOUT_EXCHANGE = "tweets";
 
     static final String QUEUE_NAME_PROCESSOR= "QUEUE_PROCESSOR_";
-    static final String QUEUE_NAME_TWEET_SAVER = "QUEUE_TWEET_SAVER";
 
     @Bean
     Queue queueProcessor1() {
         return new Queue(QUEUE_NAME_PROCESSOR+processorId, true);
     }
 
-    @Bean
+    /*@Bean
     FanoutExchange twitterFanoutExchange() {
         return new FanoutExchange(TWITTER_FANOUT_EXCHANGE + processorId);
     }
@@ -37,7 +36,21 @@ public class Application {
     Binding bindingProcessor1() {
         return BindingBuilder.bind(queueProcessor1()).to(
                 twitterFanoutExchange());
+    }*/
+
+    TopicExchange twitterFanoutExchange2() {
+        return new TopicExchange(TWITTER_FANOUT_EXCHANGE);
     }
+    @Bean
+    Binding binding2() {
+        /*return BindingBuilder.bind(queueTweetSaver()).to(
+                twitterFanoutExchange2());*/
+
+        return BindingBuilder.bind(queueProcessor1())
+                .to(twitterFanoutExchange2())
+                .with(TWITTER_FANOUT_EXCHANGE+ "."+processorId);
+    }
+
 
     @Bean
     SimpleMessageListenerContainer containerProcessor1(ConnectionFactory connectionFactory,

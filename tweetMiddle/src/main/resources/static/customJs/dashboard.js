@@ -13,7 +13,7 @@ function dashboardClicked() {
     $("#databaseTweets").removeClass("active");
     $("#dashboard").addClass("active");
     $('#divPagination').hide();
-    menu = 3;
+    menu = 4;
     unsubscribeIfNeeded();
     startDashboard();
 }
@@ -25,7 +25,7 @@ function startDashboard() {
     $.getJSON("/metrics", {}, updateMetricsInfo);
 
     // Mientras siga el dashboard seleccionado, se actualiza el estado cada 5 segundos
-    if (menu === 3)
+    if (menu === 4)
         setTimeout(startDashboard, 5000);
 }
 

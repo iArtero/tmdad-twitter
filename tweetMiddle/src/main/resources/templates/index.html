@@ -68,6 +68,9 @@
             <!--Cabecera-->
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
                 <h1 id="lblTitle" class="h2">Tweets en streaming</h1>
+                <button type="button" onclick="changeConfig()">Click Me!</button>
+
+
                 <div id="divPagination" class="btn-toolbar mb-2 mb-md-0" style="display:none">
                     <div class="btn-group mr-2">
                         <button id="previousPage" class="btn btn-sm btn-outline-secondary">Anterior</button>
@@ -199,6 +202,7 @@
 <script th:src="@{/customJs/streaming.js}" src="../../customJs/streaming.js"></script>
 <script th:src="@{/customJs/databaseList.js}" src="../../customJs/databaseList.js"></script>
 <script th:src="@{/customJs/dashboard.js}" src="../../customJs/dashboard.js"></script>
+<script th:src="@{/customJs/button.js}" src="../../customJs/button.js"></script>
 
 <!-- Icons -->
 <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>

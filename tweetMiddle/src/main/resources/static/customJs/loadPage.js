@@ -39,6 +39,7 @@ function registerEvents() {
     $("#dashboard").click(dashboardClicked);
     $("#previousPage").click(previousPageClicked);
     $("#nextPage").click(nextPageClicked);
+
 }
 
 function registerTemplates() {

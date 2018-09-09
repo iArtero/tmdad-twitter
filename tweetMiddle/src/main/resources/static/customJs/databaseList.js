@@ -12,14 +12,14 @@ function databaseClicked() {
     $("#streamingChangeTweets").removeClass("active");
     $("#databaseTweets").addClass("active");
     $("#dashboard").removeClass("active");
-    menu = 2;
+    menu = 3;
     currentPage = 0;
     unsubscribeIfNeeded();
 }
 
 function listFromDatabase(text) {
     // Peticion AJAX para buscar Tweets
-    $.getJSON("/searchedTweets/search/findByTextContaining?text=" + text + "&page=" + currentPage + "&size=8", {}, function(data) {
+    $.getJSON("/findByTextContaining?text=" + text + "&page=" + currentPage + "&size=8", {}, function(data) {
         totalPages = data.page.totalPages;
         $('#currentPage').text("Página " + (currentPage+1) + " de " + totalPages);
         var rendered = Mustache.render(templatePlainTweets, {tweets: data._embedded.searchedTweets});

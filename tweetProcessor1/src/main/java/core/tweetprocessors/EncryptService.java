@@ -5,6 +5,7 @@ import core.db.model.SearchedTweetDto;
 import core.utils.Encryptor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.metrics.CounterService;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class EncryptService {
     @Autowired
     IGeneratedTweetRepository generatedTweetRepository;*/
 
+    @Qualifier("counterService")
     @Autowired
     private CounterService counterService;
 
@@ -28,6 +30,14 @@ public class EncryptService {
 
     @Value("${encrypt.aes.key}")
     private String aesKey;
+
+    private boolean compressed = false;
+
+
+    public void changeMode(){
+        compressed = !compressed;
+    }
+
 
     public EncryptService() {
         super();
@@ -41,6 +51,11 @@ public class EncryptService {
         generatedTweetDto.setIdReferenced(tweet.getIdStr());
         String textEncrypted = encryptor.aesEncryptor(tweet.getText(), aesKey);
         generatedTweetDto.setText(textEncrypted);
+
+        if(compressed && textEncrypted.length() > 40){
+            generatedTweetDto.setText(textEncrypted.substring(0,10)+" ... "
+                    +textEncrypted.substring(textEncrypted.length()-11,textEncrypted.length()-1));
+        }
         generatedTweetDto.setPlainText(tweet.getText());
         generatedTweetDto.setFromUser(tweet.getFromUser());
 

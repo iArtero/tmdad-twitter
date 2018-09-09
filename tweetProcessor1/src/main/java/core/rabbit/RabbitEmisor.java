@@ -53,32 +53,12 @@ public class RabbitEmisor {
     }
 
     public void publish(String message, String exchangeName) throws Exception{
-        // Conexión al broker RabbitMQ broker (prueba en la URL de
-        // la variable de entorno que se llame como diga ENV_AMQPURL_NAME
-        // o sino en localhost)
 
         if(factory == null || channel == null){
             createConnectionFactory();
         }
-/*
-        if(factory == null){
-            createConnectionFactory();
-        }
 
-        Connection connection = factory.newConnection();
-        // Con un solo canal
-        Channel channel = connection.createChannel();
-
-        // Declaramos una centralita de tipo fanout llamada EXCHANGE_NAME
-
-
-        channel.exchangeDeclare(exchangeName, "fanout",true);
-*/
         channel.exchangeDeclare(exchangeName, "fanout",true);
         channel.basicPublish(exchangeName, "", null, message.getBytes());
-        //System.out.println(" [x] Enviado '" + message + "'");
-
-        //channel.close();
-        //connection.close();
     }
 }

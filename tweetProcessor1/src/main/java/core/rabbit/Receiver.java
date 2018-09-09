@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class Receiver {
 
-    private final String exchangeName = "processed1";
+    private final String exchangeName = "processed";
 
 
     @Value("${processor.id}")
@@ -30,6 +30,22 @@ public class Receiver {
 
     @Autowired
     RabbitEmisor rabbitEmisor;
+
+    private String color = "red";
+
+    /*public void changeColor(){
+        color = color.equals("black")?"red":"black";
+    }
+
+
+    static char[] swap(String str, int i, int j)
+    {
+        char ch[] = str.toCharArray();
+        char temp = ch[i];
+        ch[i] = ch[j];
+        ch[j] = temp;
+        return ch;
+    }*/
 
     private CountDownLatch latch = new CountDownLatch(1);
 
@@ -60,14 +76,14 @@ public class Receiver {
             if (Integer.parseInt(processorId) == 2) {
                 generatedTweetDto = vowelChangeService.changeTweet(searchedTweetDto);
             }
-
+            generatedTweetDto.setText(generatedTweetDto.getText());
             System.out.println("Received from <" + searchedTweetDto.getSearchedQuery()
                     + "> ; Operation<" + searchedTweetDto.getOperation() + ">");
 
             //messagingTemplate.convertAndSend("/queue/search/" + searchedTweetDto.getSearchedQuery(), generatedTweetDto);
             String tweetString = mapper.writeValueAsString(generatedTweetDto);
             try {
-                rabbitEmisor.publish(tweetString, exchangeName);
+                rabbitEmisor.publish(tweetString, exchangeName/*+processorId*/);
             } catch (Exception e) {
                 System.out.println("Error en publicación a broker");
                 e.printStackTrace();
@@ -77,7 +93,6 @@ public class Receiver {
         }
 
 
-        //messagingTemplate.convertAndSend("/queue/search/" + name, tweet, map);
     }
 
     public CountDownLatch getLatch() {

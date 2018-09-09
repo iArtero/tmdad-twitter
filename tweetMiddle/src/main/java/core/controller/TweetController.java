@@ -20,14 +20,14 @@ public class TweetController {
 
 
     @Value("${uri.tweetChooser}")
-    private String tweetChooserUri;
+    private String tweetChooser;
 
     @MessageMapping("/search")
     public void search(SimpMessageHeaderAccessor headerAccessor, @RequestParam("query") String query) {
 
         String sessionId = headerAccessor.getSessionId(); // Gets session ID
 
-        String tweetAccessFindByText = "http://"+tweetChooserUri+"/search";
+        String tweetAccessFindByText = tweetChooser+"/search";
 
         RestTemplate restTemplate = new RestTemplate();
 
