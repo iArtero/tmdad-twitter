@@ -108,8 +108,9 @@ public class EndPointsController {
     }
 
     @GetMapping("/dashboardInfo")
-    public HttpEntity dashboardInfo() throws IOException {
+    public Map<String,Object> dashboardInfo() {
 
+        Map<String, Object> mapResult = new HashMap<>();
 
         String tweetProcessor1Uri = tweetProcessor1+"/metrics";
 
@@ -136,14 +137,82 @@ public class EndPointsController {
                 entity,
                 String.class);
 
-        Map<String,Object> body = new ObjectMapper().readValue(response.getBody(), HashMap.class);
+
+        Map<String,Object> body = null;
+        try {
+            body = new ObjectMapper().readValue(response.getBody(), HashMap.class);
+            mapResult.put("counter.encryptedtweets.total",body.get("counter.encryptedtweets.total"));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
-        Integer counterStreamsTotal = (Integer) body.get("counter.encryptedtweets.total");
+        //OTRO
+        /*restTemplate = new RestTemplate();
 
-        System.out.print(counterStreamsTotal);
+        headers = new HttpHeaders();
+        headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
-        return response;
+        builder = UriComponentsBuilder.fromHttpUrl(tweetProcessor2Uri);
+
+        entity = new HttpEntity<>(headers);
+
+        response = restTemplate.exchange(
+                builder.toUriString(),
+                HttpMethod.GET,
+                entity,
+                String.class);
+
+
+        body = null;
+        try {
+            body = new ObjectMapper().readValue(response.getBody(), HashMap.class);
+            mapResult.put("counter.changedtweets.total",body.get("counter.changedtweets.total"));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+*/
+        //OTRO
+        restTemplate = new RestTemplate();
+
+        headers = new HttpHeaders();
+        headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+        builder = UriComponentsBuilder.fromHttpUrl(tweetChooserUri);
+
+        entity = new HttpEntity<>(headers);
+
+        response = restTemplate.exchange(
+                builder.toUriString(),
+                HttpMethod.GET,
+                entity,
+                String.class);
+
+
+        body = null;
+        try {
+            body = new ObjectMapper().readValue(response.getBody(), HashMap.class);
+            mapResult.put("counter.streams.total",body.get("counter.streams.total"));
+            mapResult.put("counter.streams.current",body.get("counter.streams.current"));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        //mapResult.put("counter.encryptedtweets.total",body.get("counter.encryptedtweets.total"));
+
+        /*
+        var encryptedTweets = metricsInfo["counter.encryptedtweets.total"];
+        var changedTweets = metricsInfo["counter.changedtweets.total"];
+        var totalStreams = metricsInfo[counter.streams.total"];
+        var currentStreams = metricsInfo["counter.streams.current"];
+        */
+        //System.out.print(counterStreamsTotal);
+
+        return mapResult;
 
     }
 

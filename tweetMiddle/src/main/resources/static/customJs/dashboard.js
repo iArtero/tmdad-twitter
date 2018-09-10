@@ -22,7 +22,7 @@ function startDashboard() {
     // Dos peticiones AJAX para traer informacion del estado del sistema
     $.getJSON("/health", {}).always(updateHealthInfo);
 
-    $.getJSON("/metrics", {}, updateMetricsInfo);
+    $.getJSON("/dashboardInfo", {}, updateMetricsInfo);
 
     // Mientras siga el dashboard seleccionado, se actualiza el estado cada 5 segundos
     if (menu === 4)
