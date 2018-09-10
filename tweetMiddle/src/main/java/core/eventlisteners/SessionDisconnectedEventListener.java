@@ -30,7 +30,7 @@ public class SessionDisconnectedEventListener implements ApplicationListener<Ses
 
         String sessionId = headerAccessor.getSessionId(); // Gets session ID
 
-        String tweetAccessFindByText = "http://"+tweetChooserUri+"/stop";
+        String tweetAccessFindByText = tweetChooserUri+"/stop";
 
         RestTemplate restTemplate = new RestTemplate();
 

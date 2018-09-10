@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -131,25 +132,31 @@ public class EndPointsController {
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
-        HttpEntity<String> response = restTemplate.exchange(
-                builder.toUriString(),
-                HttpMethod.GET,
-                entity,
-                String.class);
-
+        HttpEntity<String> response;
 
         Map<String,Object> body = null;
+
         try {
+
+            response = restTemplate.exchange(
+                    builder.toUriString(),
+                    HttpMethod.GET,
+                    entity,
+                    String.class);
+
+
+
+
             body = new ObjectMapper().readValue(response.getBody(), HashMap.class);
             mapResult.put("counter.encryptedtweets.total",body.get("counter.encryptedtweets.total"));
 
-        } catch (IOException e) {
+        } catch (Exception e ) {
             e.printStackTrace();
         }
 
 
         //OTRO
-        /*restTemplate = new RestTemplate();
+        restTemplate = new RestTemplate();
 
         headers = new HttpHeaders();
         headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -158,22 +165,22 @@ public class EndPointsController {
 
         entity = new HttpEntity<>(headers);
 
-        response = restTemplate.exchange(
+        try {
+            response = restTemplate.exchange(
                 builder.toUriString(),
                 HttpMethod.GET,
                 entity,
                 String.class);
 
 
-        body = null;
-        try {
+
             body = new ObjectMapper().readValue(response.getBody(), HashMap.class);
             mapResult.put("counter.changedtweets.total",body.get("counter.changedtweets.total"));
 
-        } catch (IOException e) {
+        } catch (Exception e ) {
             e.printStackTrace();
         }
-*/
+
         //OTRO
         restTemplate = new RestTemplate();
 
@@ -184,20 +191,20 @@ public class EndPointsController {
 
         entity = new HttpEntity<>(headers);
 
-        response = restTemplate.exchange(
-                builder.toUriString(),
-                HttpMethod.GET,
-                entity,
-                String.class);
-
-
-        body = null;
         try {
+            response = restTemplate.exchange(
+                    builder.toUriString(),
+                    HttpMethod.GET,
+                    entity,
+                    String.class);
+
+
+
             body = new ObjectMapper().readValue(response.getBody(), HashMap.class);
             mapResult.put("counter.streams.total",body.get("counter.streams.total"));
             mapResult.put("counter.streams.current",body.get("counter.streams.current"));
 
-        } catch (IOException e) {
+        } catch (Exception e ) {
             e.printStackTrace();
         }
 
