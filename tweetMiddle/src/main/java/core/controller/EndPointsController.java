@@ -1,33 +1,41 @@
 package core.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.OAuth2Request;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
+@SpringBootApplication
+@EnableOAuth2Sso
 @RestController
-public class EndPointsController {
+public class EndPointsController extends WebSecurityConfigurerAdapter {
 
 
     @Value("${uri.tweetAccess}")
@@ -48,8 +56,18 @@ public class EndPointsController {
     @Value("${uri.tweetChooser}")
     private String tweetChooser;
 
-    //@Autowired
-    //TwitterLookupService twitter;
+
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        // @formatter:off
+        http.antMatcher("/**").authorizeRequests()
+                //.antMatchers("/", "/login**", "/webjars/**", "/error**").permitAll()
+                .antMatchers("/configProcessor").authenticated()
+                .and().logout().logoutSuccessUrl("/").permitAll()
+                .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+        // @formatter:on
+    }
 
     @GetMapping("/findByTextContaining")
     public String findByTextContaining(String text) throws IOException {
@@ -77,11 +95,15 @@ public class EndPointsController {
 
     }
 
-    @GetMapping("/configProcessor")
-    public HttpEntity configProcessor(String processor) throws IOException {
+    //@GetMapping("/configProcessor")
+    @RequestMapping("/configProcessor")
+    //@RequestMapping("/displayHeaderInfo.do")
+    public HttpEntity configProcessor(@RequestParam("processor") String processor, Principal principal){
+
         int processorId = Integer.parseInt(processor);
 
-
+        //CsrfToken token
+        //        =session.getAttribute("HttpSessionCsrfTokenRepository.CSRF_TOKEN");
         String tweetProcessorUri = tweetProcessor1+"/change";
 
         if(processorId==2){
@@ -90,17 +112,30 @@ public class EndPointsController {
 
         RestTemplate restTemplate = new RestTemplate();
 
-        HttpHeaders headers = new HttpHeaders();
+        HttpHeaders headers = new HttpHeaders();// httpHeaders;
         headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(tweetProcessorUri);
+        OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) ((OAuth2Authentication)principal).getDetails();
 
-        HttpEntity<?> entity = new HttpEntity<>(headers);
+        headers.set("Authorization", details.getTokenType().replaceFirst("bearer","Bearer")+" "+details.getTokenValue());
+
+        MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
+       // map.add("principal", principalJSON);
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(tweetProcessorUri);
+              //  .queryParam("principal",principal);
+                //builder.queryParam("principal",principal);
+        //HttpEntity<?> entity = new HttpEntity<>(headers);
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+
+
 
         HttpEntity<String> response = restTemplate.exchange(
                 builder.toUriString(),
-                HttpMethod.GET,
-                entity,
+                HttpMethod.POST,
+                //entity,
+                request,
                 String.class);
 
 
