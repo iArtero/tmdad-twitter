@@ -5,3 +5,4 @@
 */*.iml
 */*.ico
 application.properties
+application.yml
