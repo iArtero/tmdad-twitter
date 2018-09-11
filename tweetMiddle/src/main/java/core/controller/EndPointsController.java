@@ -65,7 +65,8 @@ public class EndPointsController extends WebSecurityConfigurerAdapter {
                 //.antMatchers("/", "/login**", "/webjars/**", "/error**").permitAll()
                 .antMatchers("/configProcessor").authenticated()
                 .and().logout().logoutSuccessUrl("/").permitAll()
-                .and().csrf().ignoringAntMatchers("/logout").csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+                //.and().csrf().ignoringAntMatchers("/logout").csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .and().csrf().disable();
         // @formatter:on
     }
 
@@ -95,9 +96,7 @@ public class EndPointsController extends WebSecurityConfigurerAdapter {
 
     }
 
-    //@GetMapping("/configProcessor")
-    @RequestMapping("/configProcessor")
-    //@RequestMapping("/displayHeaderInfo.do")
+    @PostMapping("/configProcessor")
     public HttpEntity configProcessor(@RequestParam("processor") String processor, Principal principal){
 
         int processorId = Integer.parseInt(processor);

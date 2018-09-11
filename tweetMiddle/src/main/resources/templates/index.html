@@ -71,7 +71,7 @@
                 <button id="buttonLogin" type="button" onclick="login()">Login</button>
                 <button id="buttonLogout" type="button" onclick="logout()">Logout</button>
                 <button id="buttonChangeConfig" type="button" onclick="changeConfig()">Cambiar en caliente!</button>
-
+                <input id="csfr_value" type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
                 <div id="divPagination" class="btn-toolbar mb-2 mb-md-0" style="display:none">
                     <div class="btn-group mr-2">

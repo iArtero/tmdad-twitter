@@ -42,7 +42,12 @@ public class VowelChangeService {
                 .replace('e', vowelToChange)
                 .replace('i', vowelToChange)
                 .replace('o', vowelToChange)
-                .replace('u', vowelToChange);
+                .replace('u', vowelToChange)
+                .replace("A", (vowelToChange+"").toUpperCase())
+                .replace("E", (vowelToChange+"").toUpperCase())
+                .replace("I", (vowelToChange+"").toUpperCase())
+                .replace("O", (vowelToChange+"").toUpperCase())
+                .replace("U", (vowelToChange+"").toUpperCase());
         generatedTweetDto.setText(textChanged);
         generatedTweetDto.setPlainText(tweet.getText());
         generatedTweetDto.setFromUser(tweet.getFromUser());
