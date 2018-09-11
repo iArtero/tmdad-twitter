@@ -12,6 +12,9 @@ function databaseClicked() {
     $("#streamingChangeTweets").removeClass("active");
     $("#databaseTweets").addClass("active");
     $("#dashboard").removeClass("active");
+    document.getElementById('buttonLogin').style.visibility = 'hidden';
+    document.getElementById('buttonLogout').style.visibility = 'hidden';
+    document.getElementById('buttonChangeConfig').style.visibility = 'hidden';
     menu = 3;
     currentPage = 0;
     unsubscribeIfNeeded();

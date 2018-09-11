@@ -9,6 +9,7 @@ var stompClient = null;
 var menu = 1;
 var currentPage = 0;
 var totalPages = 1;
+var authenticated = false;
 
 $
     .ajaxSetup({
@@ -24,6 +25,35 @@ $
             }
         }
     });
+
+
+
+var rechargeAuthenticated= function(){
+    $.get("/user", function(data) {
+
+
+        if(data && data.authenticated){
+            authenticated = true;
+        }else{
+            authenticated = false;
+        }
+
+        if(authenticated){
+            document.getElementById('buttonLogin').style.visibility = 'hidden';
+            document.getElementById('buttonLogout').style.visibility = 'visible';
+            document.getElementById('buttonChangeConfig').style.visibility = 'visible';
+
+        }else{
+            document.getElementById('buttonLogin').style.visibility = 'visible';
+            document.getElementById('buttonLogout').style.visibility = 'hidden';
+            document.getElementById('buttonChangeConfig').style.visibility = 'hidden';
+
+        }
+    });
+};
+
+$(document).ready(rechargeAuthenticated());
+//window.onbeforeunload = rechargePage();
 
 function startSearch(event) {
     event.preventDefault();

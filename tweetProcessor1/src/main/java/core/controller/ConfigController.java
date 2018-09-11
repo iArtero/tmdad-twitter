@@ -32,6 +32,11 @@ public class ConfigController  {
 
 
 
+    @RequestMapping("/")
+    public String index() throws IOException {
+        return "Hello World!";
+    }
+
     @RequestMapping("/change")
     public String change() throws IOException {
         int processor = Integer.parseInt(processorId);
@@ -41,8 +46,7 @@ public class ConfigController  {
             vowelChangeService.changeVowel();
         }
 
-        return "{\"status\": \"OK\"}";
-
+        return "{\"changed\": \"OK\"}";
     }
 
     @MessageExceptionHandler(Exception.class)

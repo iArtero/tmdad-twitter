@@ -15,6 +15,20 @@ function streamingEncryptClicked() {
     $('#divPagination').hide();
     menu = 1;
     unsubscribeIfNeeded();
+
+    if(authenticated){
+        document.getElementById('buttonLogin').style.visibility = 'hidden';
+        document.getElementById('buttonLogout').style.visibility = 'visible';
+        document.getElementById('buttonChangeConfig').style.visibility = 'visible';
+
+    }else{
+        document.getElementById('buttonLogin').style.visibility = 'visible';
+        document.getElementById('buttonLogout').style.visibility = 'hidden';
+        document.getElementById('buttonChangeConfig').style.visibility = 'hidden';
+
+    }
+
+
 }
 
 function streamingChangeClicked() {
@@ -31,6 +45,17 @@ function streamingChangeClicked() {
     $('#divPagination').hide();
     menu = 2;
     unsubscribeIfNeeded();
+    if(authenticated){
+        document.getElementById('buttonLogin').style.visibility = 'hidden';
+        document.getElementById('buttonLogout').style.visibility = 'visible';
+        document.getElementById('buttonChangeConfig').style.visibility = 'visible';
+
+    }else{
+        document.getElementById('buttonLogin').style.visibility = 'visible';
+        document.getElementById('buttonLogout').style.visibility = 'hidden';
+        document.getElementById('buttonChangeConfig').style.visibility = 'hidden';
+
+    }
 }
 
 

@@ -13,9 +13,13 @@ function dashboardClicked() {
     $("#databaseTweets").removeClass("active");
     $("#dashboard").addClass("active");
     $('#divPagination').hide();
+    document.getElementById('buttonLogin').style.visibility = 'hidden';
+    document.getElementById('buttonLogout').style.visibility = 'hidden';
+    document.getElementById('buttonChangeConfig').style.visibility = 'hidden';
     menu = 4;
     unsubscribeIfNeeded();
     startDashboard();
+
 }
 
 function startDashboard() {

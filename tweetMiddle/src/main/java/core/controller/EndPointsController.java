@@ -65,7 +65,7 @@ public class EndPointsController extends WebSecurityConfigurerAdapter {
                 //.antMatchers("/", "/login**", "/webjars/**", "/error**").permitAll()
                 .antMatchers("/configProcessor").authenticated()
                 .and().logout().logoutSuccessUrl("/").permitAll()
-                .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+                .and().csrf().ignoringAntMatchers("/logout").csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
         // @formatter:on
     }
 
@@ -142,6 +142,8 @@ public class EndPointsController extends WebSecurityConfigurerAdapter {
         return response;
 
     }
+
+
 
     @GetMapping("/dashboardInfo")
     public Map<String,Object> dashboardInfo() {
@@ -258,7 +260,10 @@ public class EndPointsController extends WebSecurityConfigurerAdapter {
 
     }
 
-
+    @GetMapping("/user")
+    public Principal getUser(Principal principal){
+        return principal;
+    }
 
     @MessageExceptionHandler(Exception.class)
     public void handleError(Exception exception) {
