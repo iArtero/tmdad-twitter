@@ -71,7 +71,7 @@ public class EndPointsController extends WebSecurityConfigurerAdapter {
     }
 
     @GetMapping("/findByTextContaining")
-    public String findByTextContaining(String text) throws IOException {
+    public String findByTextContaining(String text, String page, String size) throws IOException {
         String tweetAccessFindByText = tweetAccessUri+"/searchedTweets/search/findByTextContaining";
 
         RestTemplate restTemplate = new RestTemplate();
@@ -80,7 +80,9 @@ public class EndPointsController extends WebSecurityConfigurerAdapter {
         headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(tweetAccessFindByText)
-                .queryParam("text", text);
+                .queryParam("text", text)
+                .queryParam("page", page)
+                .queryParam("size", size);
 
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
