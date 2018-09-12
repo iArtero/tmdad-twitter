@@ -69,6 +69,10 @@ function startSearch(event) {
         startSubscription(target, q, 2);
     }
     else if (menu === 3) {
+        // Streaming de Tweets (operacion CAMBIAR MAYUS)
+        startSubscription(target, q, 3);
+    }
+    else if (menu === 4) {
         // Listar Tweets de base de datos
         currentPage = 0;
         $('#divPagination').show();
@@ -80,6 +84,7 @@ function registerEvents() {
     $("#search").submit(startSearch);
     $("#streamingEncryptTweets").click(streamingEncryptClicked);
     $("#streamingChangeTweets").click(streamingChangeClicked);
+    $("#streamingChangeTweetsCase").click(streamingChangeCaseClicked);
     $("#databaseTweets").click(databaseClicked);
     $("#dashboard").click(dashboardClicked);
     $("#previousPage").click(previousPageClicked);

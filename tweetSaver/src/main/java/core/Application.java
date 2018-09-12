@@ -32,8 +32,6 @@ public class Application {
     }
     @Bean
     Binding binding2() {
-        /*return BindingBuilder.bind(queueTweetSaver()).to(
-                twitterFanoutExchange2());*/
 
         return BindingBuilder.bind(queueTweetSaver())
                 .to(twitterFanoutExchange2())

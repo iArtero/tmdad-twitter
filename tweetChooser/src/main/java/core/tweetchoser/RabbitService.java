@@ -55,7 +55,7 @@ public class RabbitService {
 
     }
 
-    public void publish(String message, String exchangeName) throws Exception{
+    public void publish(String message, String exchangeName, int processorId) throws Exception{
         // Conexión al broker RabbitMQ broker (prueba en la URL de
         // la variable de entorno que se llame como diga ENV_AMQPURL_NAME
         // o sino en localhost)
@@ -76,8 +76,8 @@ public class RabbitService {
 
         channel.exchangeDeclare(exchangeName, "fanout",true);
 */
-        channel.exchangeDeclare(exchangeName, "fanout",true);
-        channel.basicPublish(exchangeName, "", null, message.getBytes());
+        channel.exchangeDeclare(exchangeName, "topic",true);
+        channel.basicPublish(exchangeName, exchangeName+"."+processorId, null, message.getBytes());
         //System.out.println(" [x] Enviado '" + message + "'");
 
         //channel.close();

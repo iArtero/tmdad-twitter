@@ -10,6 +10,7 @@ function streamingEncryptClicked() {
     $("#q").attr('placeholder', 'Press Enter to start a new search');
     $("#streamingEncryptTweets").addClass("active");
     $("#streamingChangeTweets").removeClass("active");
+    $("#streamingChangeTweetsCase").removeClass("active");
     $("#databaseTweets").removeClass("active");
     $("#dashboard").removeClass("active");
     $('#divPagination').hide();
@@ -39,6 +40,7 @@ function streamingChangeClicked() {
     $("#q").attr('placeholder', 'Press Enter to start a new search');
     $("#streamingEncryptTweets").removeClass("active");
     $("#streamingChangeTweets").addClass("active");
+    $("#streamingChangeTweetsCase").removeClass("active");
     $("#changeTweets").removeClass("active");
     $("#databaseTweets").removeClass("active");
     $("#dashboard").removeClass("active");
@@ -57,7 +59,33 @@ function streamingChangeClicked() {
 
     }
 }
+function streamingChangeCaseClicked() {
+    $("#lblTitle").text("Tweets en streaming")
+    $("#dashboardBlock").hide();
+    $("#q").val("");
+    $("#q").prop('disabled', false);
+    $("#q").attr('placeholder', 'Press Enter to start a new search');
+    $("#streamingEncryptTweets").removeClass("active");
+    $("#streamingChangeTweets").removeClass("active");
+    $("#streamingChangeTweetsCase").addClass("active");
+    $("#changeTweets").removeClass("active");
+    $("#databaseTweets").removeClass("active");
+    $("#dashboard").removeClass("active");
+    $('#divPagination').hide();
+    menu = 3;
+    unsubscribeIfNeeded();
+    if(authenticated){
+        document.getElementById('buttonLogin').style.visibility = 'hidden';
+        document.getElementById('buttonLogout').style.visibility = 'visible';
+        document.getElementById('buttonChangeConfig').style.visibility = 'visible';
 
+    }else{
+        document.getElementById('buttonLogin').style.visibility = 'visible';
+        document.getElementById('buttonLogout').style.visibility = 'hidden';
+        document.getElementById('buttonChangeConfig').style.visibility = 'hidden';
+
+    }
+}
 
 function startSubscription(target, query, mode) {
     unsubscribeIfNeeded();

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import core.db.model.GeneratedTweetDto;
 import core.db.model.SearchedTweetDto;
 import core.tweetprocessors.EncryptService;
+import core.tweetprocessors.MayusMinusService;
 import core.tweetprocessors.VowelChangeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +28,9 @@ public class Receiver {
 
     @Autowired
     VowelChangeService vowelChangeService;
+
+    @Autowired
+    MayusMinusService mayusMinusService;
 
     @Autowired
     RabbitEmisor rabbitEmisor;
@@ -72,9 +76,10 @@ public class Receiver {
 
             if (Integer.parseInt(processorId) == 1) {
                 generatedTweetDto = encryptService.encryptTweet(searchedTweetDto);
-            }
-            if (Integer.parseInt(processorId) == 2) {
+            }else if (Integer.parseInt(processorId) == 2) {
                 generatedTweetDto = vowelChangeService.changeTweet(searchedTweetDto);
+            }else if(Integer.parseInt(processorId) == 3){
+                generatedTweetDto = mayusMinusService.changeTweet(searchedTweetDto);
             }
             generatedTweetDto.setText(generatedTweetDto.getText());
             System.out.println("Received from <" + searchedTweetDto.getSearchedQuery()

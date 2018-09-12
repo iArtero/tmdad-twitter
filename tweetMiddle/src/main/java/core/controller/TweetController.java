@@ -51,16 +51,6 @@ public class TweetController {
                 HttpMethod.GET,
                 entity,
                 String.class);
-
-
-        //return response;
-       /*
-
-        // Reads param
-        BasicDBObject argument = (BasicDBObject) JSON.parse(query);
-        String q = (String)argument.get("query");
-        int op = (int)argument.get("mode");
-        twitter.search(q, op, sessionId);*/
     }
 
 

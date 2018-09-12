@@ -10,12 +10,14 @@ function databaseClicked() {
     $("#q").attr('placeholder', 'Press Enter to start a new search');
     $("#streamingEncryptTweets").removeClass("active");
     $("#streamingChangeTweets").removeClass("active");
+    $("#streamingChangeTweetsCase").removeClass("active");
+
     $("#databaseTweets").addClass("active");
     $("#dashboard").removeClass("active");
     document.getElementById('buttonLogin').style.visibility = 'hidden';
     document.getElementById('buttonLogout').style.visibility = 'hidden';
     document.getElementById('buttonChangeConfig').style.visibility = 'hidden';
-    menu = 3;
+    menu = 4;
     currentPage = 0;
     unsubscribeIfNeeded();
 }

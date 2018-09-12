@@ -2,6 +2,7 @@ package core.controller;
 
 
 import core.tweetprocessors.EncryptService;
+import core.tweetprocessors.MayusMinusService;
 import core.tweetprocessors.VowelChangeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +31,9 @@ public class ConfigController  {
     @Autowired
     VowelChangeService vowelChangeService;
 
+    @Autowired
+    MayusMinusService mayusMinusService;
+
 
 
     @RequestMapping("/")
@@ -44,6 +48,8 @@ public class ConfigController  {
             encryptService.changeMode();
         }else if(processor==2){
             vowelChangeService.changeVowel();
+        }else if(processor==3){
+            mayusMinusService.changeMode();
         }
 
         return "{\"changed\": \"OK\"}";

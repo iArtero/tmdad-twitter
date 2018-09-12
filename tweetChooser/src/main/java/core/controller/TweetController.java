@@ -17,30 +17,16 @@ public class TweetController {
     TwitterLookupService twitter;
 
     @RequestMapping(value="/search", method=RequestMethod.GET)
-    public String search(/*SimpMessageHeaderAccessor headerAccessor, */@RequestParam("query") String query,
+    public String search(@RequestParam("query") String query,
                        @RequestParam("mode") String mode, @RequestParam("sessionId") String sessionId) {
-        //String sessionId = headerAccessor.getSessionId(); // Gets session ID
-        // Reads param
-        /*BasicDBObject argument = (BasicDBObject) JSON.parse(query);
-        String q = (String)argument.get("query");
-        int op = (int)argument.get("mode");
 
-        twitter.search(q, op, sessionId);
-        */
         twitter.search(query,Integer.parseInt(mode),sessionId);
         return "OK";
     }
 
     @RequestMapping(value="/stop", method=RequestMethod.POST)
     public String stop(@RequestParam("sessionId") String sessionId) {
-        //String sessionId = headerAccessor.getSessionId(); // Gets session ID
-        // Reads param
-        /*BasicDBObject argument = (BasicDBObject) JSON.parse(query);
-        String q = (String)argument.get("query");
-        int op = (int)argument.get("mode");
 
-        twitter.search(q, op, sessionId);
-        */
         twitter.cancelSearch(sessionId);
         return "OK";
     }

@@ -10,13 +10,14 @@ function dashboardClicked() {
     $("#q").attr('placeholder', '');
     $("#streamingEncryptTweets").removeClass("active");
     $("#streamingChangeTweets").removeClass("active");
+    $("#streamingChangeTweetsCase").removeClass("active");
     $("#databaseTweets").removeClass("active");
     $("#dashboard").addClass("active");
     $('#divPagination').hide();
     document.getElementById('buttonLogin').style.visibility = 'hidden';
     document.getElementById('buttonLogout').style.visibility = 'hidden';
     document.getElementById('buttonChangeConfig').style.visibility = 'hidden';
-    menu = 4;
+    menu = 5;
     unsubscribeIfNeeded();
     startDashboard();
 
@@ -29,7 +30,7 @@ function startDashboard() {
     $.getJSON("/dashboardInfo", {}, updateMetricsInfo);
 
     // Mientras siga el dashboard seleccionado, se actualiza el estado cada 5 segundos
-    if (menu === 4)
+    if (menu === 5)
         setTimeout(startDashboard, 5000);
 }
 
@@ -71,10 +72,10 @@ function updateMetricsInfo(metricsInfo) {
     var encryptedTweets = metricsInfo["counter.encryptedtweets.total"];
     var changedTweets = metricsInfo["counter.changedtweets.total"];
 
-    if (totalStreams === undefined) totalStreams = 0;
-    if (currentStreams === undefined) currentStreams = 0;
-    if (encryptedTweets === undefined) encryptedTweets = 0;
-    if (changedTweets === undefined) changedTweets = 0;
+    if (!totalStreams) totalStreams = 0;
+    if (!currentStreams) currentStreams = 0;
+    if (!encryptedTweets) encryptedTweets = 0;
+    if (!changedTweets) changedTweets = 0;
 
     $('#totalStreamings').text(totalStreams);
     $('#currentStreamings').text(currentStreams);

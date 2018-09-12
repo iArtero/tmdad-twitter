@@ -54,7 +54,7 @@ public class SimpleStreamListener implements StreamListener {
                     searchedTweetDto.setOperation(operation);
 
                     String tweetString = mapper.writeValueAsString(searchedTweetDto);
-                    rabbitService.publish(tweetString, exchangeName);
+                    rabbitService.publish(tweetString, exchangeName,searchedTweetDto.getOperation());
                 }
             }
 

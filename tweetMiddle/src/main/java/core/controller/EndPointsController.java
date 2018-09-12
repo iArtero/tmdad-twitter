@@ -47,6 +47,9 @@ public class EndPointsController extends WebSecurityConfigurerAdapter {
     @Value("${uri.tweetProcessor2}")
     private String tweetProcessor2;
 
+    @Value("${uri.tweetProcessor3}")
+    private String tweetProcessor3;
+
     @Value("${uri.tweetSaver}")
     private String tweetSaver;
 
@@ -109,6 +112,8 @@ public class EndPointsController extends WebSecurityConfigurerAdapter {
 
         if(processorId==2){
             tweetProcessorUri = tweetProcessor2+"/change";
+        }else if(processorId==3){
+            tweetProcessorUri = tweetProcessor3+"/change";
         }
 
         RestTemplate restTemplate = new RestTemplate();
@@ -187,6 +192,7 @@ public class EndPointsController extends WebSecurityConfigurerAdapter {
 
             body = new ObjectMapper().readValue(response.getBody(), HashMap.class);
             mapResult.put("counter.encryptedtweets.total",body.get("counter.encryptedtweets.total"));
+            mapResult.put("health.processor1","UP");
 
         } catch (Exception e ) {
             e.printStackTrace();
@@ -214,6 +220,7 @@ public class EndPointsController extends WebSecurityConfigurerAdapter {
 
             body = new ObjectMapper().readValue(response.getBody(), HashMap.class);
             mapResult.put("counter.changedtweets.total",body.get("counter.changedtweets.total"));
+            mapResult.put("health.processor2","UP");
 
         } catch (Exception e ) {
             e.printStackTrace();
@@ -241,6 +248,8 @@ public class EndPointsController extends WebSecurityConfigurerAdapter {
             body = new ObjectMapper().readValue(response.getBody(), HashMap.class);
             mapResult.put("counter.streams.total",body.get("counter.streams.total"));
             mapResult.put("counter.streams.current",body.get("counter.streams.current"));
+            mapResult.put("health.chooser","UP");
+
 
         } catch (Exception e ) {
             e.printStackTrace();
