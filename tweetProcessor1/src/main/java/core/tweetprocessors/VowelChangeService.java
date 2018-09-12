@@ -1,9 +1,12 @@
 package core.tweetprocessors;
 
+import core.db.model.ConfigurationDto;
 import core.db.model.GeneratedTweetDto;
 import core.db.model.SearchedTweetDto;
+import core.db.repository.IConfigurationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.metrics.CounterService;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,15 @@ public class VowelChangeService {
     @Qualifier("counterService")
     @Autowired
     private CounterService counterService;
+
+    @Autowired
+    private IConfigurationRepository configurationRepository;
+
+    @Value("${processor.config.key}")
+    private String configKey;
+
+    @Value("${processor.id}")
+    private String processorId;
 
     private  char vowelToChange = 'a';
 
@@ -25,9 +37,29 @@ public class VowelChangeService {
     }
 
     public void changeVowel(){
+
+
+        ConfigurationDto conf =  configurationRepository.findOne(configKey+processorId);
+        int value = i;
+
+        if(conf == null){
+            conf = new ConfigurationDto();
+            i = Integer.parseInt(conf.getValue());
+            conf.setId(configKey+processorId);
+        }
+
         i++;
         i = i%vowels.length;
         vowelToChange = vowels[i];
+
+        conf.setValue(i+"");
+
+        configurationRepository.save(conf);
+
+
+
+
+
 
     }
 

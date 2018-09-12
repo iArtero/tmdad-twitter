@@ -1,7 +1,9 @@
 package core.tweetprocessors;
 
+import core.db.model.ConfigurationDto;
 import core.db.model.GeneratedTweetDto;
 import core.db.model.SearchedTweetDto;
+import core.db.repository.IConfigurationRepository;
 import core.utils.Encryptor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +23,16 @@ public class EncryptService {
     @Autowired
     IGeneratedTweetRepository generatedTweetRepository;*/
 
+
+    @Autowired
+    IConfigurationRepository configurationRepository;
+
     @Qualifier("counterService")
     @Autowired
     private CounterService counterService;
+
+    @Value("${processor.config.key}")
+    private String configKey;
 
     @Value("${processor.id}")
     private String processorId;
@@ -35,7 +44,27 @@ public class EncryptService {
 
 
     public void changeMode(){
-        compressed = !compressed;
+
+        ConfigurationDto conf =  configurationRepository.findOne(configKey+processorId);
+        String value = String.valueOf(compressed);
+
+        if(conf == null){
+            conf = new ConfigurationDto();
+            value = conf.getValue();
+            conf.setId(configKey+processorId);
+        }
+
+
+        if(Boolean.parseBoolean(value)){
+            compressed = false;
+        }else {
+            compressed = true;
+        }
+        value = String.valueOf(compressed);
+
+        conf.setValue(value);
+
+        configurationRepository.save(conf);
     }
 
 

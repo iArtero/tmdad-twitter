@@ -1,7 +1,9 @@
 package core.tweetprocessors;
 
+import core.db.model.ConfigurationDto;
 import core.db.model.GeneratedTweetDto;
 import core.db.model.SearchedTweetDto;
+import core.db.repository.IConfigurationRepository;
 import core.utils.Encryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,6 +23,12 @@ public class MayusMinusService {
     @Autowired
     private CounterService counterService;
 
+    @Autowired
+    private IConfigurationRepository configurationRepository;
+
+    @Value("${processor.config.key}")
+    private String configKey;
+
     @Value("${processor.id}")
     private String processorId;
 
@@ -29,7 +37,28 @@ public class MayusMinusService {
 
 
     public void changeMode(){
-        mayus = !mayus;
+
+        ConfigurationDto conf =  configurationRepository.findOne(configKey+processorId);
+        String value = String.valueOf(mayus);
+        if(conf == null){
+            conf = new ConfigurationDto();
+            value = conf.getValue();
+            conf.setId(configKey+processorId);
+        }
+
+
+
+
+        if(Boolean.parseBoolean(value)){
+            mayus = false;
+        }else {
+            mayus = true;
+        }
+        value = String.valueOf(mayus);
+
+        conf.setValue(value);
+
+        configurationRepository.save(conf);
     }
 
 
