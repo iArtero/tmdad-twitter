@@ -26,7 +26,8 @@ public class TweetController {
 
     @RequestMapping(value="/search", method=RequestMethod.POST)
     public String search(@RequestParam("query") String query,
-                         @RequestParam("mode") String mode, @RequestParam("sessionId") String sessionId) {
+                         @RequestParam("mode") String mode, @RequestParam("sessionId") String sessionId,
+                         @RequestParam("facebook_name") String facebookName, @RequestParam("facebook_id") String facebookId) {
 
 
 
@@ -35,6 +36,8 @@ public class TweetController {
         SearchedWordDto searchedWord = new SearchedWordDto();
         searchedWord.setSessionId(sessionId);
         searchedWord.setWord(query);
+        searchedWord.setUserFacebookId(facebookId);
+        searchedWord.setUserFacebookName(facebookName);
 
         searchedWordsRepository.save(searchedWord);
 

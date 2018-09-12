@@ -67,7 +67,7 @@ public class MayusMinusService {
     }
 
     public GeneratedTweetDto changeTweet(SearchedTweetDto tweet) {
-        counterService.increment("counter.changedtweets.total");
+        counterService.increment("counter.changedtweetscase.total");
 
         GeneratedTweetDto generatedTweetDto = new GeneratedTweetDto();
 

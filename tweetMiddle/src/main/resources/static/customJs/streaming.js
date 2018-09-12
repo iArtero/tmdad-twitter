@@ -90,7 +90,11 @@ function streamingChangeCaseClicked() {
 function startSubscription(target, query, mode) {
     unsubscribeIfNeeded();
     var parameter = {query: query, mode: mode};
-    stompClient.send("/app/" + target, {}, JSON.stringify(parameter));
+    if(authenticated){
+        stompClient.send("/app/" + target+"auth", {}, JSON.stringify(parameter));
+    }else{
+        stompClient.send("/app/" + target, {}, JSON.stringify(parameter));
+    }
     subscription = stompClient.subscribe('/queue/search/' +mode + '/' + query, showEncrpytedTweet);
 }
 
