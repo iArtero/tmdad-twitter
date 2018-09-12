@@ -44,8 +44,9 @@ public class VowelChangeService {
 
         if(conf == null){
             conf = new ConfigurationDto();
-            i = Integer.parseInt(conf.getValue());
             conf.setId(configKey+processorId);
+        }else{
+            i = Integer.parseInt(conf.getValue());
         }
 
         i++;

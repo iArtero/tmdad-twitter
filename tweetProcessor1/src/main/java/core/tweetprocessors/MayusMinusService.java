@@ -42,8 +42,10 @@ public class MayusMinusService {
         String value = String.valueOf(mayus);
         if(conf == null){
             conf = new ConfigurationDto();
-            value = conf.getValue();
             conf.setId(configKey+processorId);
+        }else{
+            value = conf.getValue();
+            value = String.valueOf(mayus);
         }
 
 

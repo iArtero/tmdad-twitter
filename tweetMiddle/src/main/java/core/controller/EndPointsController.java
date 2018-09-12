@@ -151,27 +151,41 @@ public class EndPointsController extends WebSecurityConfigurerAdapter {
 
 
 
+
+
     @GetMapping("/dashboardInfo")
-    public Map<String,Object> dashboardInfo() {
+    public Map<String,Object> dashboardInfo(@RequestParam("node") String node) {
 
         Map<String, Object> mapResult = new HashMap<>();
 
-        String tweetProcessor1Uri = tweetProcessor1+"/metrics";
+        String uriToConsult = "";
 
-        String tweetProcessor2Uri = tweetProcessor2+"/metrics";
+        switch (node){
+            case "saver":  uriToConsult = tweetSaver;
+                break;
+            case "access":  uriToConsult = tweetAccess;
+                break;
+            case "chooser":  uriToConsult = tweetChooser;
+                break;
+            case "processor1":  uriToConsult = tweetProcessor1;
+                break;
+            case "processor2":  uriToConsult = tweetProcessor2;
+                break;
+            case "processor3":  uriToConsult = tweetProcessor3;
+                break;
+            default:
+                break;
 
-        String tweetAccessUri = tweetAccess+"/metrics";
+        }
 
-        String tweetSaverUri = tweetSaver+"/metrics";
-
-        String tweetChooserUri = tweetChooser+"/metrics";
+        uriToConsult = uriToConsult+"/metrics";
 
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(tweetProcessor1Uri);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uriToConsult);
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
@@ -188,87 +202,39 @@ public class EndPointsController extends WebSecurityConfigurerAdapter {
                     String.class);
 
 
-
-
             body = new ObjectMapper().readValue(response.getBody(), HashMap.class);
-            mapResult.put("counter.encryptedtweets.total",body.get("counter.encryptedtweets.total"));
-            mapResult.put("health.processor1","UP");
 
-        } catch (Exception e ) {
-            e.printStackTrace();
-        }
+            switch (node){
+                case "chooser":
+                    mapResult.put("counter.streams.total",body.get("counter.streams.total"));
+                    mapResult.put("counter.streams.current",body.get("counter.streams.current"));
+                    break;
+                case"processor1":
+                    mapResult.put("counter.encryptedtweets.total",body.get("counter.encryptedtweets.total"));
+                    break;
+                case "processor2":
+                    mapResult.put("counter.encryptedtweets.total",body.get("counter.changedtweets.total"));
+                    break;
+                case "processor3":
+                    mapResult.put("counter.encryptedtweets.total",body.get("counter.changedtweetsCase.total"));
+                    break;
 
+            }
 
-        //OTRO
-        restTemplate = new RestTemplate();
-
-        headers = new HttpHeaders();
-        headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-
-        builder = UriComponentsBuilder.fromHttpUrl(tweetProcessor2Uri);
-
-        entity = new HttpEntity<>(headers);
-
-        try {
-            response = restTemplate.exchange(
-                builder.toUriString(),
-                HttpMethod.GET,
-                entity,
-                String.class);
-
-
-
-            body = new ObjectMapper().readValue(response.getBody(), HashMap.class);
-            mapResult.put("counter.changedtweets.total",body.get("counter.changedtweets.total"));
-            mapResult.put("health.processor2","UP");
-
-        } catch (Exception e ) {
-            e.printStackTrace();
-        }
-
-        //OTRO
-        restTemplate = new RestTemplate();
-
-        headers = new HttpHeaders();
-        headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-
-        builder = UriComponentsBuilder.fromHttpUrl(tweetChooserUri);
-
-        entity = new HttpEntity<>(headers);
-
-        try {
-            response = restTemplate.exchange(
-                    builder.toUriString(),
-                    HttpMethod.GET,
-                    entity,
-                    String.class);
-
-
-
-            body = new ObjectMapper().readValue(response.getBody(), HashMap.class);
-            mapResult.put("counter.streams.total",body.get("counter.streams.total"));
-            mapResult.put("counter.streams.current",body.get("counter.streams.current"));
-            mapResult.put("health.chooser","UP");
+            mapResult.put("health","UP");
 
 
         } catch (Exception e ) {
             e.printStackTrace();
         }
 
-
-        //mapResult.put("counter.encryptedtweets.total",body.get("counter.encryptedtweets.total"));
-
-        /*
-        var encryptedTweets = metricsInfo["counter.encryptedtweets.total"];
-        var changedTweets = metricsInfo["counter.changedtweets.total"];
-        var totalStreams = metricsInfo[counter.streams.total"];
-        var currentStreams = metricsInfo["counter.streams.current"];
-        */
-        //System.out.print(counterStreamsTotal);
-
+        mapResult.put("node",node);
         return mapResult;
 
+
     }
+
+
 
     @GetMapping("/user")
     public Principal getUser(Principal principal){

@@ -40,6 +40,7 @@ function changeConfig(){
 }
 
 function login(){
+    unsubscribeIfNeeded();
     window.location.href = "/login";
     $.get("/user", function(data) {
         rechargeAuthenticated();
@@ -48,6 +49,7 @@ function login(){
 
 
 function logout() {
+    unsubscribeIfNeeded();
     $.post("/logout", function() {
         $.get("/user", function(data) {
             rechargeAuthenticated();

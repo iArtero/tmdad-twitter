@@ -55,39 +55,6 @@ public class Application {
     }
 
 
-    /*@Bean
-    Queue queueTweetSaver() {
-        return new Queue(QUEUE_NAME_TWEET_SAVER, true);
-    }
-
-    @Bean
-    FanoutExchange twitterFanoutExchange2() {
-        return new FanoutExchange(TWITTER_FANOUT_EXCHANGE);
-    }
-    @Bean
-    Binding binding2() {
-        return BindingBuilder.bind(queueTweetSaver()).to(
-                twitterFanoutExchange2());
-    }
-
-    @Bean
-    SimpleMessageListenerContainer containerTweetSaver(ConnectionFactory connectionFactory,
-                                                       MessageListenerAdapter listenerAdapterTweetSaver) {
-        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-
-        container.setConnectionFactory(connectionFactory);
-        container.setQueueNames(QUEUE_NAME_TWEET_SAVER);
-        container.setMessageListener(listenerAdapterTweetSaver);
-
-        return container;
-    }
-
-    @Bean
-    MessageListenerAdapter listenerAdapterTweetSaver(TweetSaver tweetSaver) {
-        return new MessageListenerAdapter(tweetSaver, "receiveMessage");
-    }*/
-
-
     public static void main(String[] args) {
 
         SpringApplication.run(Application.class, args);

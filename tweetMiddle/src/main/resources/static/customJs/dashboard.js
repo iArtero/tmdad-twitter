@@ -27,11 +27,17 @@ function startDashboard() {
     // Dos peticiones AJAX para traer informacion del estado del sistema
     $.getJSON("/health", {}).always(updateHealthInfo);
 
-    $.getJSON("/dashboardInfo", {}, updateMetricsInfo);
+    $.getJSON("/dashboardInfo?node=chooser", {}, updateMetricsInfo);
+    $.getJSON("/dashboardInfo?node=saver", {}, updateMetricsInfo);
+    $.getJSON("/dashboardInfo?node=access", {}, updateMetricsInfo);
+    $.getJSON("/dashboardInfo?node=processor1", {}, updateMetricsInfo);
+    $.getJSON("/dashboardInfo?node=processor2", {}, updateMetricsInfo);
+    $.getJSON("/dashboardInfo?node=processor3", {}, updateMetricsInfo);
+
 
     // Mientras siga el dashboard seleccionado, se actualiza el estado cada 5 segundos
     if (menu === 5)
-        setTimeout(startDashboard, 5000);
+        setTimeout(startDashboard, 30000);
 }
 
 function updateHealthInfo(healthInfo) {
@@ -67,18 +73,84 @@ function updateHealthInfo(healthInfo) {
 }
 
 function updateMetricsInfo(metricsInfo) {
-    var totalStreams = metricsInfo["counter.streams.total"];
-    var currentStreams = metricsInfo["counter.streams.current"];
-    var encryptedTweets = metricsInfo["counter.encryptedtweets.total"];
-    var changedTweets = metricsInfo["counter.changedtweets.total"];
+    if(metricsInfo.node == "chooser"){
+        var totalStreams = metricsInfo["counter.streams.total"];
+        var currentStreams = metricsInfo["counter.streams.current"];
 
-    if (!totalStreams) totalStreams = 0;
-    if (!currentStreams) currentStreams = 0;
-    if (!encryptedTweets) encryptedTweets = 0;
-    if (!changedTweets) changedTweets = 0;
+        if (!totalStreams) totalStreams = 0;
+        if (!currentStreams) currentStreams = 0;
 
-    $('#totalStreamings').text(totalStreams);
-    $('#currentStreamings').text(currentStreams);
-    $('#encryptedTweets').text(encryptedTweets);
-    $('#changedTweets').text(changedTweets);
+        $('#totalStreamings').text(totalStreams);
+        $('#currentStreamings').text(currentStreams);
+
+        if(metricsInfo["health"] == "UP"){
+            $('#chooserStatusOk').show();
+            $('#chooserStatusNoOk').hide();
+        }else{
+            $('#chooserStatusOk').hide();
+            $('#chooserStatusNoOk').show();
+        }
+    }else if(metricsInfo.node == "saver"){
+        if(metricsInfo["health"] == "UP"){
+            $('#saverStatusOk').show();
+            $('#saverStatusNoOk').hide();
+        }else{
+            $('#saverStatusOk').hide();
+            $('#saverStatusNoOk').show();
+        }
+    }else if(metricsInfo.node == "access"){
+        if(metricsInfo["health"] == "UP"){
+            $('#accessStatusOk').show();
+            $('#accessStatusNoOk').hide();
+
+        }else{
+            $('#accessStatusOk').hide();
+            $('#accessStatusNoOk').show();
+        }
+    }else if(metricsInfo.node == "processor1"){
+        var encryptedTweets = metricsInfo["counter.encryptedtweets.total"];
+
+        if (!encryptedTweets) encryptedTweets = 0;
+        $('#encryptedTweets').text(encryptedTweets);
+
+
+        if(metricsInfo["health"] == "UP"){
+            $('#processor1StatusOk').show();
+            $('#processor1StatusNoOk').hide();
+
+        }else{
+            $('#processor1StatusOk').hide();
+            $('#processor1StatusNoOk').show();
+        }
+    }else if(metricsInfo.node == "processor2"){
+        var changedtweets = metricsInfo["counter.changedtweets.total"];
+
+        if (!changedtweets) changedtweets = 0;
+        $('#changedTweets').text(changedtweets);
+
+        if(metricsInfo["health"] == "UP"){
+            $('#processor2StatusOk').show();
+            $('#processor2StatusNoOk').hide();
+
+        }else{
+            $('#processor2StatusOk').hide();
+            $('#processor2StatusNoOk').show();
+        }
+    }else if(metricsInfo.node == "processor3"){
+        var changedtweetscase = metricsInfo["counter.changedtweetscase.total"];
+
+        if (!changedtweetscase) changedtweetscase = 0;
+        $('#changedTweetsCase').text(changedtweetscase);
+
+        if(metricsInfo["health"] == "UP"){
+            $('#processor3StatusOk').show();
+            $('#processor3StatusNoOk').hide();
+        }else{
+            $('#processor3StatusOk').hide();
+            $('#processor3StatusNoOk').show();
+        }
+    }
+
+
+
 }

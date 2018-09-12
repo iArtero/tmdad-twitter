@@ -1,6 +1,7 @@
 package core.tweetchoser;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.metrics.CounterService;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
@@ -18,8 +19,9 @@ import java.util.List;
 public class TwitterLookupService {
 
 
-    /*@Autowired
-    private CounterService counterService;*/
+    @Qualifier("counterService")
+    @Autowired
+    private CounterService counterService;
 
     @Autowired
     private RabbitService rabbitService;
@@ -43,8 +45,8 @@ public class TwitterLookupService {
 
 
     public void search(String query, int operation, String sessionId) {
-        //counterService.increment("counter.streams.current");
-        //counterService.increment("counter.streams.total");
+        counterService.increment("counter.streams.current");
+        counterService.increment("counter.streams.total");
 
         Twitter twitter = new TwitterTemplate(consumerKey, consumerSecret, accessToken, accessTokenSecret);
         sessionQueries.put(sessionId, query);
@@ -66,7 +68,7 @@ public class TwitterLookupService {
 
         if (sessionQueries.containsKey(sessionId)) {
             sessionQueries.remove(sessionId);
-            //counterService.decrement("counter.streams.current");
+            counterService.decrement("counter.streams.current");
         }
 
         String queries = getQueries();

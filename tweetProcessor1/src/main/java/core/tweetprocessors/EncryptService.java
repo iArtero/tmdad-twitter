@@ -50,8 +50,11 @@ public class EncryptService {
 
         if(conf == null){
             conf = new ConfigurationDto();
-            value = conf.getValue();
+
             conf.setId(configKey+processorId);
+        }else{
+            value = conf.getValue();
+            value = String.valueOf(compressed);
         }
 
 
