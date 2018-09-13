@@ -36,12 +36,12 @@ public class ConfigController  {
 
 
 
-    @RequestMapping("/")
+    @GetMapping("/")
     public String index() throws IOException {
         return "Hello World!";
     }
 
-    @RequestMapping("/change")
+    @PostMapping("/change")
     public String change() throws IOException {
         int processor = Integer.parseInt(processorId);
         if(processor==1){

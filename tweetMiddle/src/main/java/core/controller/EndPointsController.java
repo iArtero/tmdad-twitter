@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.security.Principal;
@@ -61,6 +62,8 @@ public class EndPointsController extends WebSecurityConfigurerAdapter {
 
 
 
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // @formatter:off
@@ -74,7 +77,7 @@ public class EndPointsController extends WebSecurityConfigurerAdapter {
     }
 
     @GetMapping("/findByTextContaining")
-    public String findByTextContaining(String text, String page, String size) throws IOException {
+    public String findByTextContaining(String text, String page, String size, HttpServletResponse responseHttp) throws IOException {
         String tweetAccessFindByText = tweetAccessUri+"/searchedTweets/search/findByTextContaining";
 
         RestTemplate restTemplate = new RestTemplate();
@@ -96,7 +99,7 @@ public class EndPointsController extends WebSecurityConfigurerAdapter {
                 entity,
                 String.class);
 
-
+        responseHttp.setStatus(HttpServletResponse.SC_ACCEPTED);
         return response.getBody();
 
     }
