@@ -42,7 +42,8 @@ public class TwitterLookupService {
     Stream s = null;
     List<StreamListener> list = new ArrayList<>();
     HashMap<String, String> sessionQueries = new HashMap<>();
-
+    HashMap<String,Integer> sessionOperation = new HashMap<>();
+    HashMap<String, String> queryOperations = new HashMap<>();
 
     public void search(String query, int operation, String sessionId) {
         counterService.increment("counter.streams.current");
@@ -51,12 +52,24 @@ public class TwitterLookupService {
         Twitter twitter = new TwitterTemplate(consumerKey, consumerSecret, accessToken, accessTokenSecret);
         sessionQueries.put(sessionId, query);
 
+        sessionOperation.put(sessionId,operation);
+
+        if(queryOperations.get(query)!=null){
+            String operations = queryOperations.get(query);
+            operations = operations+","+operation;
+            queryOperations.put(query,operations);
+        }else{
+            queryOperations.put(query,operation+"");
+        }
+
         String queries = getQueries();
+
+
         if (list.size() > 0) {
             ((SimpleStreamListener) list.get(0)).setQueryList(queries);
             ((SimpleStreamListener) list.get(0)).setOperation(operation);
         } else {
-            list.add(new SimpleStreamListener(queries,operation,rabbitService));
+            list.add(new SimpleStreamListener(queries,operation,rabbitService,queryOperations));
         }
 
         closeStreamAndStopThread();

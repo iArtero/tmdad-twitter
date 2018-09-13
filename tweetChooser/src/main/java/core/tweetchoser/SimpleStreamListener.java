@@ -10,6 +10,7 @@ import org.springframework.social.twitter.api.Tweet;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class SimpleStreamListener implements StreamListener {
@@ -20,12 +21,14 @@ public class SimpleStreamListener implements StreamListener {
     private String queryList;
     private int operation;
     private RabbitService rabbitService;
+    private Map<String,String> queryOperations;
 
 
-    public SimpleStreamListener(String queryList, int operation, RabbitService rabbitService) {
+    public SimpleStreamListener(String queryList, int operation, RabbitService rabbitService, Map<String,String> queryOperations) {
         this.queryList = queryList;
         this.operation = operation;
         this.rabbitService = rabbitService;
+        this.queryOperations = queryOperations;
     }
 
 
@@ -46,15 +49,25 @@ public class SimpleStreamListener implements StreamListener {
             for(String query : queries){
                 query= query.trim();
                 if(tweet.getText().contains(query)){
-
                     ObjectMapper mapper = new ObjectMapper();
                     SearchedTweetDto searchedTweetDto = new SearchedTweetDto();
                     BeanUtils.copyProperties(tweet, searchedTweetDto);
                     searchedTweetDto.setSearchedQuery(query);
+
+
+
+                    String operations = queryOperations.get(query);
+                    String[] operationArray = operations.split(",");
                     searchedTweetDto.setOperation(operation);
 
-                    String tweetString = mapper.writeValueAsString(searchedTweetDto);
-                    rabbitService.publish(tweetString, exchangeName,searchedTweetDto.getOperation());
+                    for(String op :operationArray){
+
+                        searchedTweetDto.setOperation(Integer.parseInt(op));
+                        String tweetString = mapper.writeValueAsString(searchedTweetDto);
+
+                        rabbitService.publish(tweetString, exchangeName,Integer.parseInt(op));
+
+                    }
                 }
             }
 
