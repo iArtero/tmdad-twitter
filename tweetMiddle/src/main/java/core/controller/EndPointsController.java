@@ -213,10 +213,10 @@ public class EndPointsController extends WebSecurityConfigurerAdapter {
                     mapResult.put("counter.encryptedtweets.total",body.get("counter.encryptedtweets.total"));
                     break;
                 case "processor2":
-                    mapResult.put("counter.encryptedtweets.total",body.get("counter.changedtweets.total"));
+                    mapResult.put("counter.changedtweets.total",body.get("counter.changedtweets.total"));
                     break;
                 case "processor3":
-                    mapResult.put("counter.encryptedtweets.total",body.get("counter.changedtweetsCase.total"));
+                    mapResult.put("counter.changedtweets.total",body.get("counter.changedtweetsCase.total"));
                     break;
 
             }
